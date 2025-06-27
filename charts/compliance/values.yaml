@@ -19,7 +19,7 @@ policy:
         contentFile: ssg-ocp4-ds.xml
         contentImage: 'registry.redhat.io/compliance/openshift-compliance-content-rhel8@sha256:27212fdeb6c35bd96700fd6de8e74d541e0591f1c74448b293e2c850c0291c09'
   profile:
-    - name: ocpv4
+    - name: ocp4
       uid: 716811cb-cee9-4624-b96c-9e62a93b7616
       schedule: 0 1 * * *
       remediate: true

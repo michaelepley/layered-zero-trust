@@ -27,8 +27,8 @@ metadata:
       controller: true
       kind: ProfileBundle
       name: {{ include "canonical-name.profile-bundle" . | default uuidv4 }}
-      uid: {{ (index .Values.policy.profile 0).uid | default uuidv4 }}
+      uid: {{ (index .Values.policy.baseline 0).uid | default uuidv4 }}
 rules:
-  - ocp4-reject-unsigned-images-by-default
+  - {{ include "canonical-name.profile-bundle" . | default uuidv4 }}-reject-unsigned-images-by-default
 title: Placeholder for ZTVP Baseline for Red Hat OpenShift - Node level
 version: Revision 0

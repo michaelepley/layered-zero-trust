@@ -13,3 +13,4 @@ super-linter-output
 
 # GitHub Actions leftovers
 github_conf
+/.project

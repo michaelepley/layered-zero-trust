@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - profilebundle.finalizers.compliance.openshift.io
   name: {{ $profile.name }}-{{ $baseline.name }}
-  uid: {{ .uid}}
+  uid: {{ $baseline.uid}}
   namespace: {{ index $.Values.global "compliance-operator-namespace" }}
   annotations:
     {{- if eq $.Values.installerType "argocd" }}
