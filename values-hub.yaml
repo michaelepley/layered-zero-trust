@@ -79,7 +79,7 @@ clusterGroup:
       namespace: cert-manager-operator
       project: hub
       path: charts/certmanager
-    rh-cert-manager:
+    rh-compliance:
       name: rh-compliance
       namespace: openshift-compliance
       project: hub
