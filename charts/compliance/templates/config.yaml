@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: {{ index .Values.global "compliance-operator-namespace" }}
+  name: compliance-system
+data:
+  name: {{ .Values.compliance.name }}-{{ .Values.compliance.variant }}
+  uid: {{ .Values.compliance.uid }}
+  compliance: {{ include "canonical-name.compliance" . }}
+  profile-bundle: {{ include "canonical-name.profile-bundle" . }}
+  profile: {{ include "canonical-name.profile" . }}
+  scan-setting: {{ include "canonical-name.scan-setting" . }}
+  scan-setting-binding: {{ include "canonical-name.scan-setting-binding" . }}
+  compliance-regime: {{ include "canonical-name.compliance-regime" . }}

@@ -1,0 +1,34 @@
+﻿apiVersion: compliance.openshift.io/v1alpha1
+description: 'This compliance profile is currently a placeholder for Baseline configuration settings for deployment of Red Hat OpenShift Container Platform.'
+id: xccdf_org.ssgproject.content_profile_moderate-node
+kind: Profile
+metadata:
+  namespace: {{ index .Values.global "compliance-operator-namespace" }}
+  name:  {{ include "canonical-name.profile" . | default uuidv4 }}
+  annotations:
+    compliance.openshift.io/image-digest: pb-ocp49bc88
+    compliance.openshift.io/product: redhat_openshift_container_platform_node_4
+    compliance.openshift.io/product-type: Node
+    {{- if eq .Values.installerType "argocd" }}
+    argocd.argoproj.io/sync-options: ServerSideApply=true, Validate=false, SkipDryRunOnMissingResource=true
+    {{- else if eq .Values.installerType "helm" }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-20"
+    {{- else }}
+    # No annotation set
+    {{- end }}
+  labels:
+    compliance-regime: {{ include "canonical-name.compliance-regime" . }}
+    compliance.openshift.io/profile-bundle: {{ include "canonical-name.profile-bundle" . | default uuidv4 }}
+    compliance.openshift.io/profile-guid: {{ (index .Values.policy.profile 0).uid | default uuidv4 }}
+  ownerReferences:
+    - apiVersion: compliance.openshift.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ProfileBundle
+      name: {{ include "canonical-name.profile-bundle" . | default uuidv4 }}
+      uid: {{ (index .Values.policy.profile 0).uid | default uuidv4 }}
+rules:
+  - ocp4-reject-unsigned-images-by-default
+title: Placeholder for ZTVP Baseline for Red Hat OpenShift - Node level
+version: Revision 0

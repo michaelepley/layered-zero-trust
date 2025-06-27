@@ -1,0 +1,28 @@
+﻿{{ range $baseline := .Values.policy.baseline }}
+{{ range $profile := $.Values.policy.profile }}
+apiVersion: compliance.openshift.io/v1alpha1
+kind: ScanSettingBinding
+metadata:
+  name: {{ $baseline.name }}-{{ $profile.name }}
+  namespace: {{ index $.Values.global "compliance-operator-namespace" }}
+  annotations:
+    {{- if eq $.Values.installerType "argocd" }}
+    argocd.argoproj.io/sync-options: ServerSideApply=true, Validate=false, SkipDryRunOnMissingResource=true
+    {{- else if eq $.Values.installerType "helm" }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-9"
+    {{- else }}
+    # No annotation set
+    {{- end }}
+  labels:
+    compliance-regime: {{ include "canonical-name.compliance-regime" $ }}
+profiles:
+  - apiGroup: compliance.openshift.io/v1alpha1
+    kind: Profile
+    name: {{ include "canonical-name.profile" $ | default uuidv4 }}
+settingsRef:
+  apiGroup: compliance.openshift.io/v1alpha1
+  kind: ScanSetting
+  name: {{ $.Values.compliance.name }}-{{ $.Values.compliance.variant }}-{{ $profile.name}}
+{{ end }}
+{{ end }}

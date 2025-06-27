@@ -1,0 +1,26 @@
+﻿{{ range $baseline := .Values.policy.baseline }}
+{{ range $profile := $.Values.policy.profile }}
+apiVersion: compliance.openshift.io/v1alpha1
+kind: ProfileBundle
+metadata:
+  finalizers:
+    - profilebundle.finalizers.compliance.openshift.io
+  name: {{ $profile.name }}-{{ $baseline.name }}
+  uid: {{ .uid}}
+  namespace: {{ index $.Values.global "compliance-operator-namespace" }}
+  annotations:
+    {{- if eq $.Values.installerType "argocd" }}
+    argocd.argoproj.io/sync-options: ServerSideApply=true, Validate=false, SkipDryRunOnMissingResource=true
+    {{- else if eq $.Values.installerType "helm" }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-9"
+    {{- else }}
+    # No annotation set
+    {{- end }}
+  labels:
+    compliance-regime:  {{ include "canonical-name.compliance-regime" $ }}
+spec:
+  contentFile: {{ $baseline.content.contentFile }}
+  contentImage: {{ $baseline.content.contentImage }}
+{{end}}
+{{end}}

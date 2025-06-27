@@ -1,0 +1,27 @@
+---
+installerType: "helm"
+global:
+  clusterDomain: clustername.test.example.com
+  clusterPlatform: AWS
+  compliance-operator-namespace: openshift-compliance
+compliance:
+  name: validated-pattern
+  variant: layered
+  major-version: "0"
+  minor-version: "1"
+  uid: b4f01e87-7ab1-4cb5-af83-30c7d14f1616
+  enabled: true
+policy:
+  baseline:
+    - name: zero-trust
+      uid: 2b0eda08-4481-4634-9d23-9709212f387d
+      content:
+        contentFile: ssg-ocp4-ds.xml
+        contentImage: 'registry.redhat.io/compliance/openshift-compliance-content-rhel8@sha256:27212fdeb6c35bd96700fd6de8e74d541e0591f1c74448b293e2c850c0291c09'
+  profile:
+    - name: ocpv4
+      uid: 716811cb-cee9-4624-b96c-9e62a93b7616
+      schedule: 0 1 * * *
+      remediate: true
+      targets:
+        - worker

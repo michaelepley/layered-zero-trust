@@ -1,0 +1,50 @@
+﻿{{ range $profile := .Values.policy.profile }}
+apiVersion: compliance.openshift.io/v1alpha1
+kind: ScanSetting
+timeout: 30m
+strictNodeScan: true
+metadata:
+  name:  {{ $.Values.compliance.name }}-{{ $.Values.compliance.variant }}-{{ $profile.name}}
+  namespace: {{ index $.Values.global "compliance-operator-namespace" }}
+  labels:
+    compliance-regime: {{ include "canonical-name.compliance-regime" $ }}
+  annotations:
+    {{- if eq $.Values.installerType "argocd" }}
+    argocd.argoproj.io/sync-options: ServerSideApply=true, Validate=false, SkipDryRunOnMissingResource=true
+    {{- else if eq $.Values.installerType "helm" }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-10"
+    {{- else }}
+    # No annotation set
+    {{- end }}
+showNotApplicable: false
+rawResultStorage:
+  nodeSelector:
+    node-role.kubernetes.io/master: ''
+  pvAccessModes:
+    - ReadWriteOnce
+  rotation: 3
+  size: 1Gi
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+schedule: {{ .schedule }}
+suspend: false
+roles:
+  {{ .targets }}
+maxRetryOnTimeout: 3
+scanTolerations:
+  - operator: Exists
+{{ end }}
