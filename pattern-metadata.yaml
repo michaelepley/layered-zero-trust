@@ -10,7 +10,7 @@ issues_url: https://github.com/validatedpatterns/layered-zero-trust/issues
 docs_url: https://validatedpatterns.io/patterns/layered-zero-trust/
 ci_url: https://validatedpatterns.io/ci/?pattern=layeredzerotrust
 # can be sandbox, tested or maintained
-tier: sandbox
+tier: tested
 owners: sabre1041, michaelepley
 requirements:
   hub: # Main cluster

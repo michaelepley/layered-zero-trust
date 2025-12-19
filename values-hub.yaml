@@ -89,7 +89,7 @@ clusterGroup:
     zero-trust-workload-identity-manager:
       name: openshift-zero-trust-workload-identity-manager
       namespace: zero-trust-workload-identity-manager
-      channel: tech-preview-v0.2
+      channel: stable-v1
       catalogSource: redhat-marketplace
     compliance-operator:
       name: compliance-operator
@@ -105,7 +105,7 @@ clusterGroup:
     # odf:
     #   name: odf-operator
     #   namespace: openshift-storage
-    #   channel: stable-4.19
+    #   channel: stable-4.20
     #   annotations:
     #     argocd.argoproj.io/sync-wave: "-4"  # Install after OperatorGroup (-5)
     # quay-operator:
